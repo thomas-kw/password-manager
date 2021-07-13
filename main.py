@@ -59,6 +59,41 @@ def save():
             password_input.delete(0, END)
 
 
+# ---------------------------- FIND PASSWORD ------------------------------- #
+
+def find_password():
+    search_input = website_input.get().lower()
+    try:
+        with open("data.json", "r") as data_file:
+            data = json.load(data_file)
+
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message=f"No data file found.")
+
+    else:
+        try:
+            saved_account = data[search_input]["email"]
+            saved_password = data[search_input]["password"]
+            messagebox.showinfo(title="Account", message=f"Account: {saved_account}\nPassword: {saved_password}")
+
+        except KeyError:
+            messagebox.showinfo(title="Error", message="No details for the website exist.")
+
+
+
+        # Another implementation:
+        # detected = False
+        # for key, value in data.items():
+        #     if search_input in key:
+        #         saved_account = data[search_input]["email"]
+        #         saved_password = data[search_input]["password"]
+        #         messagebox.showinfo(title="Account", message=f"Account: {saved_account}\nPassword: {saved_password}")
+        #         detected = True
+        #
+        # if not detected:
+        #     messagebox.showinfo(title="Account", message="Account not found.")
+
+
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Password Manager")
@@ -82,8 +117,8 @@ password_label.grid(row=3, column=0)
 
 # Entries
 
-website_input = Entry(width=35)
-website_input.grid(row=1, column=1, columnspan=2)
+website_input = Entry(width=21)
+website_input.grid(row=1, column=1)
 website_input.focus()
 
 username_input = Entry(width=35)
@@ -94,6 +129,9 @@ password_input = Entry(width=21)
 password_input.grid(row=3, column=1)
 
 # Buttons
+
+search_button = Button(text="Search", width=13, command=find_password)
+search_button.grid(row=1, column=2)
 
 password_button = Button(text="Generate Password", command=generate_password)
 password_button.grid(row=3, column=2)
